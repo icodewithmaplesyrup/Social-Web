@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": 4,
+      "label": "Aidan Hopson",
+      "x": 408.546414155762,
+      "y": 89.82782881056627,
+      "bio": "",
+      "images": [],
+      "fill": "#FAC775",
+      "textFill": "#633806"
+    },
+    {
+      "id": 5,
+      "label": "Leo Tseng",
+      "x": 473.00942386727127,
+      "y": 184.72437873793695,
+      "bio": "",
+      "images": [],
+      "fill": "#F4C0D1",
+      "textFill": "#72243E"
+    },
+    {
+      "id": 6,
+      "label": "Shin Chuang",
+      "x": 438.4928385932395,
+      "y": 294.72442863538583,
+      "bio": "",
+      "images": [],
+      "fill": "#C0DD97",
+      "textFill": "#27500A"
+    },
+    {
+      "id": 7,
+      "label": "Skyler Ortiz-Luis",
+      "x": 213.92155359987947,
+      "y": 245.76726649363803,
+      "bio": "",
+      "images": [],
+      "fill": "#CECBF6",
+      "textFill": "#3C3489"
+    },
+    {
+      "id": 8,
+      "label": "Rohit Shetty",
+      "x": 345.1997377134984,
+      "y": 360.1780582816662,
+      "bio": "",
+      "images": [],
+      "fill": "#B5D4F4",
+      "textFill": "#0C447C"
+    },
+    {
+      "id": 10,
+      "label": "Dustin Heise",
+      "x": 317.5195623337991,
+      "y": 280.11932620540995,
+      "bio": "",
+      "images": [],
+      "fill": "#F5C4B3",
+      "textFill": "#712B13"
+    },
+    {
+      "id": 12,
+      "label": "Owen Werehane",
+      "x": 255.17714092164874,
+      "y": 121.06119516492907,
+      "bio": "",
+      "images": [],
+      "fill": "#F4C0D1",
+      "textFill": "#72243E"
+    },
+    {
+      "id": 13,
+      "label": "Matthew Pak",
+      "x": 128.75130697398083,
+      "y": 167.0911960558866,
+      "bio": "",
+      "images": [],
+      "fill": "#C0DD97",
+      "textFill": "#27500A"
+    },
+    {
+      "id": 14,
+      "label": "Aarav Maggon",
+      "x": 223.77475381288556,
+      "y": 385.2715338403723,
+      "bio": "",
+      "images": [],
+      "fill": "#CECBF6",
+      "textFill": "#3C3489"
+    },
+    {
+      "id": 15,
+      "label": "Jack Andrews",
+      "x": 618.9226461535991,
+      "y": 155.15779639605017,
+      "bio": "",
+      "images": [],
+      "fill": "#B5D4F4",
+      "textFill": "#0C447C"
+    },
+    {
+      "id": 16,
+      "label": "Chase Austin",
+      "x": 705.2910056137441,
+      "y": 72.24571400008783,
+      "bio": "",
+      "images": [],
+      "fill": "#9FE1CB",
+      "textFill": "#085041"
+    },
+    {
+      "id": 17,
+      "label": "Pierce Austin",
+      "x": 779.2973879013252,
+      "y": 264.91968289366855,
+      "bio": "",
+      "images": [],
+      "fill": "#F5C4B3",
+      "textFill": "#712B13"
+    },
+    {
+      "id": 18,
+      "label": "Connor Sullivan",
+      "x": 561.4587973771245,
+      "y": 309.56550265463454,
+      "bio": "",
+      "images": [],
+      "fill": "#FAC775",
+      "textFill": "#633806"
+    },
+    {
+      "id": 19,
+      "label": "Sawyer",
+      "x": 489.25596307381693,
+      "y": 28.641872684467046,
+      "bio": "",
+      "images": [],
+      "fill": "#F4C0D1",
+      "textFill": "#72243E"
+    },
+    {
+      "id": 20,
+      "label": "Nikole Ortiz-Luis",
+      "x": 32.43438666414096,
+      "y": 466.19436474149256,
+      "bio": "",
+      "images": [],
+      "fill": "#C0DD97",
+      "textFill": "#27500A"
+    },
+    {
+      "id": 21,
+      "label": "Victoria Pak",
+      "x": 59.22628824965443,
+      "y": 235.73452272632295,
+      "bio": "",
+      "images": [],
+      "fill": "#CECBF6",
+      "textFill": "#3C3489"
+    },
+    {
+      "id": 22,
+      "label": "Connor Hohm",
+      "x": 658.9061392074575,
+      "y": 243.96508571510174,
+      "bio": "",
+      "images": [],
+      "fill": "#B5D4F4",
+      "textFill": "#0C447C"
+    },
+    {
+      "id": 23,
+      "label": "Chase Mader",
+      "x": 135.45172887329502,
+      "y": 75.33112150051068,
+      "bio": "",
+      "images": [],
+      "fill": "#9FE1CB",
+      "textFill": "#085041"
+    },
+    {
+      "id": 24,
+      "label": "Nikita Milyutin",
+      "x": 328.82023289879044,
+      "y": 195.713236993272,
+      "bio": "",
+      "images": [],
+      "fill": "#F5C4B3",
+      "textFill": "#712B13"
+    },
+    {
+      "id": 25,
+      "label": "Atticus O'Neill",
+      "x": 482.92610124236353,
+      "y": 368.03824777035584,
+      "bio": "",
+      "images": [],
+      "fill": "#FAC775",
+      "textFill": "#633806"
+    },
+    {
+      "id": 26,
+      "label": "Tristan Macyntire",
+      "x": 773.8617664473394,
+      "y": 160.85552096425172,
+      "bio": "",
+      "images": [],
+      "fill": "#F4C0D1",
+      "textFill": "#72243E"
+    },
+    {
+      "id": 27,
+      "label": "Avery Dutch",
+      "x": 872.0074177320744,
+      "y": 21.688117840652822,
+      "bio": "",
+      "images": [],
+      "fill": "#C0DD97",
+      "textFill": "#27500A"
+    },
+    {
+      "id": 29,
+      "label": "Colton Walmer",
+      "x": 683.4873129638509,
+      "y": 344.2189336013358,
+      "bio": "",
+      "images": [],
+      "fill": "#B5D4F4",
+      "textFill": "#0C447C"
+    },
+    {
+      "id": 30,
+      "label": "Vikram Shetty",
+      "x": 374.69279280924826,
+      "y": 477.8567969121889,
+      "bio": "",
+      "images": [],
+      "fill": "#9FE1CB",
+      "textFill": "#085041"
+    },
+    {
+      "id": 31,
+      "label": "Bryce Mcyntire",
+      "x": 605.0594931124974,
+      "y": 457.76194998468856,
+      "bio": "",
+      "images": [],
+      "fill": "#F5C4B3",
+      "textFill": "#712B13"
+    },
+    {
+      "id": 32,
+      "label": "Holden Coit",
+      "x": 855.1092492567304,
+      "y": 371.54646207092117,
+      "bio": "",
+      "images": [],
+      "fill": "#FAC775",
+      "textFill": "#633806"
+    },
+    {
+      "id": 33,
+      "label": "Taj Brinkman",
+      "x": 743.6588615689341,
+      "y": 463.7123848634458,
+      "bio": "",
+      "images": [],
+      "fill": "#F4C0D1",
+      "textFill": "#72243E"
+    },
+    {
+      "id": 34,
+      "label": "Khalil Karim",
+      "x": 924.4283860905032,
+      "y": 209.01547900703594,
+      "bio": "",
+      "images": [],
+      "fill": "#C0DD97",
+      "textFill": "#27500A"
+    },
+    {
+      "id": 35,
+      "label": "Dean Hiranburana",
+      "x": 487.58730084162266,
+      "y": 515.0375032959248,
+      "bio": "",
+      "images": [],
+      "fill": "#CECBF6",
+      "textFill": "#3C3489"
+    },
+    {
+      "id": 36,
+      "label": "Aman Panchal",
+      "x": 917.5421170782275,
+      "y": 106.41392145837449,
+      "bio": "",
+      "images": [],
+      "fill": "#B5D4F4",
+      "textFill": "#0C447C"
+    },
+    {
+      "id": 37,
+      "label": "Wyatt Neitz",
+      "x": 1046.7302681062306,
+      "y": 55.150899886928556,
+      "bio": "",
+      "images": [],
+      "fill": "#9FE1CB",
+      "textFill": "#085041"
+    },
+    {
+      "id": 38,
+      "label": "Asher Piazzola",
+      "x": 1029.2385742744375,
+      "y": 163.69461137601309,
+      "bio": "",
+      "images": [],
+      "fill": "#F5C4B3",
+      "textFill": "#712B13"
+    }
+  ],
+  "edges": [
+    {
+      "a": 4,
+      "b": 12,
+      "type": "friends"
+    },
+    {
+      "a": 4,
+      "b": 6,
+      "type": "friends"
+    },
+    {
+      "a": 4,
+      "b": 8,
+      "type": "friends"
+    },
+    {
+      "a": 12,
+      "b": 6,
+      "type": "friends"
+    },
+    {
+      "a": 5,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 5,
+      "b": 6,
+      "type": "friends"
+    },
+    {
+      "a": 10,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 10,
+      "b": 5,
+      "type": "friends"
+    },
+    {
+      "a": 10,
+      "b": 6,
+      "type": "friends"
+    },
+    {
+      "a": 13,
+      "b": 10,
+      "type": "friends"
+    },
+    {
+      "a": 13,
+      "b": 5,
+      "type": "friends"
+    },
+    {
+      "a": 13,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 13,
+      "b": 6,
+      "type": "friends"
+    },
+    {
+      "a": 14,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 14,
+      "b": 13,
+      "type": "friends"
+    },
+    {
+      "a": 15,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 15,
+      "b": 12,
+      "type": "friends"
+    },
+    {
+      "a": 15,
+      "b": 16,
+      "type": "family"
+    },
+    {
+      "a": 16,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 15,
+      "b": 17,
+      "type": "family"
+    },
+    {
+      "a": 16,
+      "b": 17,
+      "type": "family"
+    },
+    {
+      "a": 17,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 12,
+      "b": 7,
+      "type": "custom_103"
+    },
+    {
+      "a": 10,
+      "b": 15,
+      "type": "custom_103"
+    },
+    {
+      "a": 18,
+      "b": 10,
+      "type": "custom_103"
+    },
+    {
+      "a": 18,
+      "b": 15,
+      "type": "custom_103"
+    },
+    {
+      "a": 18,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 19,
+      "b": 15,
+      "type": "friends"
+    },
+    {
+      "a": 19,
+      "b": 4,
+      "type": "acquaintance"
+    },
+    {
+      "a": 19,
+      "b": 12,
+      "type": "custom_103"
+    },
+    {
+      "a": 19,
+      "b": 7,
+      "type": "custom_103"
+    },
+    {
+      "a": 20,
+      "b": 7,
+      "type": "family"
+    },
+    {
+      "a": 20,
+      "b": 14,
+      "type": "custom_102"
+    },
+    {
+      "a": 21,
+      "b": 13,
+      "type": "family"
+    },
+    {
+      "a": 21,
+      "b": 14,
+      "type": "friends"
+    },
+    {
+      "a": 22,
+      "b": 15,
+      "type": "custom_103"
+    },
+    {
+      "a": 22,
+      "b": 18,
+      "type": "custom_103"
+    },
+    {
+      "a": 22,
+      "b": 10,
+      "type": "custom_103"
+    },
+    {
+      "a": 22,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 23,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 23,
+      "b": 8,
+      "type": "dating"
+    },
+    {
+      "a": 24,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 25,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 25,
+      "b": 8,
+      "type": "friends"
+    },
+    {
+      "a": 26,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 27,
+      "b": 26,
+      "type": "dating"
+    },
+    {
+      "a": 27,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 22,
+      "b": 29,
+      "type": "friends"
+    },
+    {
+      "a": 29,
+      "b": 4,
+      "type": "custom_103"
+    },
+    {
+      "a": 8,
+      "b": 30,
+      "type": "family"
+    },
+    {
+      "a": 31,
+      "b": 8,
+      "type": "friends"
+    },
+    {
+      "a": 31,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 31,
+      "b": 7,
+      "type": "friends"
+    },
+    {
+      "a": 31,
+      "b": 13,
+      "type": "friends"
+    },
+    {
+      "a": 31,
+      "b": 6,
+      "type": "friends"
+    },
+    {
+      "a": 32,
+      "b": 29,
+      "type": "custom_103"
+    },
+    {
+      "a": 32,
+      "b": 31,
+      "type": "friends"
+    },
+    {
+      "a": 32,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 33,
+      "b": 32,
+      "type": "dating"
+    },
+    {
+      "a": 33,
+      "b": 31,
+      "type": "friends"
+    },
+    {
+      "a": 33,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 34,
+      "b": 33,
+      "type": "friends"
+    },
+    {
+      "a": 34,
+      "b": 31,
+      "type": "friends"
+    },
+    {
+      "a": 34,
+      "b": 32,
+      "type": "friends"
+    },
+    {
+      "a": 34,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 13,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 21,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 14,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 23,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 6,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 32,
+      "type": "friends"
+    },
+    {
+      "a": 35,
+      "b": 34,
+      "type": "friends"
+    },
+    {
+      "a": 36,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 36,
+      "b": 35,
+      "type": "custom_103"
+    },
+    {
+      "a": 36,
+      "b": 37,
+      "type": "friends"
+    },
+    {
+      "a": 37,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 37,
+      "b": 18,
+      "type": "custom_103"
+    },
+    {
+      "a": 37,
+      "b": 22,
+      "type": "custom_103"
+    },
+    {
+      "a": 37,
+      "b": 15,
+      "type": "custom_103"
+    },
+    {
+      "a": 37,
+      "b": 10,
+      "type": "custom_103"
+    },
+    {
+      "a": 38,
+      "b": 36,
+      "type": "friends"
+    },
+    {
+      "a": 38,
+      "b": 4,
+      "type": "friends"
+    },
+    {
+      "a": 38,
+      "b": 7,
+      "type": "custom_103"
+    },
+    {
+      "a": 38,
+      "b": 12,
+      "type": "custom_103"
+    },
+    {
+      "a": 38,
+      "b": 37,
+      "type": "friends"
+    }
+  ],
+  "relTypes": [
+    {
+      "id": "friends",
+      "label": "Friends",
+      "stroke": "#888780",
+      "dasharray": "none",
+      "width": 1.8
+    },
+    {
+      "id": "dating",
+      "label": "Dating",
+      "stroke": "#D4537E",
+      "dasharray": "6,4",
+      "width": 2
+    },
+    {
+      "id": "acquaintance",
+      "label": "Acquaintance",
+      "stroke": "#378ADD",
+      "dasharray": "2,4",
+      "width": 1.5
+    },
+    {
+      "id": "family",
+      "label": "Family",
+      "stroke": "#639922",
+      "dasharray": "10,4",
+      "width": 2
+    },
+    {
+      "id": "custom_101",
+      "label": "Classmates",
+      "stroke": "#7f77dd",
+      "dasharray": "none",
+      "width": 1.8
+    },
+    {
+      "id": "custom_102",
+      "label": "Ship",
+      "stroke": "#146c4a",
+      "dasharray": "4,3,1,3",
+      "width": 1.8
+    },
+    {
+      "id": "custom_103",
+      "label": "Teammates",
+      "stroke": "#c70000",
+      "dasharray": "none",
+      "width": 1.8
+    }
+  ],
+  "nextNodeId": 39,
+  "nextRelId": 104,
+  "palIdx": 38
+}
