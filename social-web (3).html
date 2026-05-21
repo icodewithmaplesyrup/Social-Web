@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Social web</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f5f5f3; color: #1a1a1a; }
+
+  /* ── Layout ── */
+  #app { display: flex; height: 100vh; padding: 10px; gap: 10px; }
+  #canvas-wrap {
+    flex: 1; position: relative; overflow: hidden;
+    background: #f0eeea; border-radius: 12px;
+    border: 0.5px solid rgba(0,0,0,0.12);
+  }
+  svg#net { width: 100%; height: 100%; cursor: default; }
+
+  /* ── Toolbar ── */
+  #toolbar { position: absolute; top: 12px; left: 12px; display: flex; gap: 8px; }
+  #toolbar button {
+    font-size: 13px; padding: 6px 12px; border-radius: 8px;
+    border: 0.5px solid rgba(0,0,0,0.2); background: #fff;
+    color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: 6px;
+  }
+  #toolbar button:hover { background: #f0eeea; }
+
+  /* ── Legend ── */
+  #legend {
+    position: absolute; bottom: 12px; left: 12px;
+    background: #fff; border: 0.5px solid rgba(0,0,0,0.12);
+    border-radius: 8px; padding: 8px 12px;
+    display: flex; flex-direction: column; gap: 5px;
+    max-height: 260px; overflow-y: auto;
+  }
+  .legend-header {
+    font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 2px;
+  }
+  .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
+  .legend-row button {
+    background: none; border: none; cursor: pointer; color: #bbb;
+    font-size: 13px; padding: 0 0 0 4px; line-height: 1;
+  }
+  .legend-row button:hover { color: #e24b4a; }
+
+  /* ── SVG node styles ── */
+  .node-group { cursor: pointer; }
+  .node-ellipse { transition: filter 0.12s; }
+  .node-group:hover .node-ellipse { filter: brightness(0.93); }
+  .node-label {
+    pointer-events: none; font-family: system-ui, sans-serif;
+    font-size: 13px; font-weight: 500; text-anchor: middle; dominant-baseline: central;
+  }
+
+  /* ── Side panel ── */
+  #panel {
+    width: 260px; min-width: 260px; background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.12); border-radius: 12px;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  #panel.hidden { display: none; }
+  #panel-header {
+    padding: 14px 14px 10px; border-bottom: 0.5px solid rgba(0,0,0,0.08);
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  #panel-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 500; flex-shrink: 0;
+  }
+  #panel-name-wrap { flex: 1; margin-left: 10px; }
+  #panel-name {
+    font-size: 15px; font-weight: 500; color: #1a1a1a;
+    border: none; background: transparent; outline: none; width: 100%;
+  }
+  #panel-name:focus { border-bottom: 1px solid rgba(0,0,0,0.2); }
+  #panel-conn-count { font-size: 12px; color: #888; margin-top: 2px; }
+  #close-panel { background: none; border: none; cursor: pointer; color: #999; font-size: 18px; padding: 0; }
+  #panel-body {
+    flex: 1; padding: 12px 14px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  #panel-body label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+  #panel-bio {
+    width: 100%; font-size: 13px; border: 0.5px solid rgba(0,0,0,0.12);
+    border-radius: 8px; padding: 8px; font-family: system-ui, sans-serif;
+    resize: none; background: #f9f9f7; color: #1a1a1a; min-height: 65px;
+  }
+  #panel-bio:focus { outline: none; border-color: rgba(0,0,0,0.25); }
+  .img-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .img-thumb { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; border: 0.5px solid rgba(0,0,0,0.1); }
+  .img-add {
+    width: 56px; height: 56px; border-radius: 8px;
+    border: 0.5px dashed rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #bbb; font-size: 20px; background: #f9f9f7;
+  }
+  .img-add:hover { background: #f0eeea; }
+  .conn-chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .conn-chip {
+    font-size: 12px; padding: 3px 8px 3px 0; border-radius: 100px;
+    background: #f5f5f3; color: #555; border: 0.5px solid rgba(0,0,0,0.1);
+    display: flex; align-items: center; gap: 4px; padding-left: 0; overflow: hidden;
+  }
+  .conn-chip-swatch { width: 10px; height: 100%; min-height: 22px; flex-shrink: 0; }
+  .conn-chip-text { padding-left: 6px; }
+  .conn-chip-x { cursor: pointer; color: #bbb; font-size: 11px; padding-right: 2px; }
+  .conn-chip-x:hover { color: #e24b4a; }
+  #connect-btn {
+    font-size: 13px; padding: 7px 12px; border-radius: 8px;
+    border: 0.5px solid rgba(0,0,0,0.15); background: transparent;
+    color: #666; cursor: pointer; width: 100%;
+  }
+  #connect-btn:hover { background: #f5f5f3; }
+  #connect-btn.active { background: #e6f1fb; color: #185fa5; border-color: #b5d4f4; }
+  #del-btn {
+    font-size: 13px; padding: 7px 12px; border-radius: 8px;
+    border: 0.5px solid #f7c1c1; background: transparent;
+    color: #a32d2d; cursor: pointer; width: 100%;
+  }
+  #del-btn:hover { background: #fcebeb; }
+
+  /* ── Modals ── */
+  .modal-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 30; border-radius: 12px;
+  }
+  .modal {
+    background: #fff; border-radius: 12px; padding: 20px;
+    width: 260px; border: 0.5px solid rgba(0,0,0,0.12);
+  }
+  .modal h3 { font-size: 15px; font-weight: 500; margin-bottom: 14px; color: #1a1a1a; }
+  .modal input, .modal select {
+    width: 100%; margin-bottom: 10px; font-size: 13px;
+    padding: 7px 10px; border: 0.5px solid rgba(0,0,0,0.18);
+    border-radius: 8px; background: #f9f9f7; color: #1a1a1a;
+  }
+  .modal input:focus, .modal select:focus { outline: none; border-color: rgba(0,0,0,0.3); }
+  .modal-btns { display: flex; gap: 8px; margin-top: 4px; }
+  .modal-btns button {
+    flex: 1; font-size: 13px; padding: 7px; border-radius: 8px;
+    border: 0.5px solid rgba(0,0,0,0.15); cursor: pointer;
+    background: transparent; color: #1a1a1a;
+  }
+  .modal-btns button.primary { background: #1a1a1a; color: #fff; border-color: transparent; }
+  .modal-btns button:hover:not(.primary) { background: #f5f5f3; }
+
+  /* ── Relationship picker ── */
+  .rel-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: 8px; cursor: pointer;
+    border: 0.5px solid transparent; margin-bottom: 5px;
+  }
+  .rel-option:hover { background: #f5f5f3; }
+  .rel-option-label { font-size: 13px; color: #1a1a1a; flex: 1; }
+  .rel-option-del { color: #bbb; font-size: 13px; cursor: pointer; }
+  .rel-option-del:hover { color: #e24b4a; }
+
+  /* ── Manage types panel ── */
+  #manage-section { border-top: 0.5px solid rgba(0,0,0,0.08); padding-top: 12px; margin-top: 4px; }
+  #manage-section label { font-size: 12px; color: #888; display: block; margin-bottom: 6px; }
+  .new-rel-row { display: flex; gap: 6px; align-items: center; }
+  .new-rel-row input[type="text"] {
+    flex: 1; font-size: 13px; padding: 6px 8px;
+    border: 0.5px solid rgba(0,0,0,0.15); border-radius: 8px;
+    background: #f9f9f7; color: #1a1a1a;
+  }
+  .new-rel-row input[type="text"]:focus { outline: none; border-color: rgba(0,0,0,0.3); }
+  .new-rel-row input[type="color"] {
+    width: 32px; height: 32px; border: none; background: none;
+    cursor: pointer; padding: 0; border-radius: 6px;
+  }
+  .changelog-entry {
+    border: 0.5px solid rgba(0,0,0,0.1); border-radius: 8px;
+    padding: 10px 12px; background: #f9f9f7;
+  }
+  .changelog-entry-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .changelog-entry-msg { font-size: 13px; font-weight: 500; color: #1a1a1a; flex: 1; }
+  .changelog-entry-time { font-size: 11px; color: #999; white-space: nowrap; }
+  .changelog-entry-author { font-size: 12px; color: #888; margin-top: 2px; }
+  .changelog-revert-btn {
+    font-size: 12px; padding: 4px 9px; border-radius: 6px;
+    border: 0.5px solid rgba(0,0,0,0.15); background: transparent;
+    color: #555; cursor: pointer; white-space: nowrap; margin-top: 6px;
+  }
+  .changelog-revert-btn:hover { background: #fcebeb; color: #a32d2d; border-color: #f7c1c1; }
+
+    font-size: 12px; padding: 5px 6px; border: 0.5px solid rgba(0,0,0,0.15);
+    border-radius: 8px; background: #f9f9f7; color: #1a1a1a;
+  }
+  .add-rel-btn {
+    font-size: 13px; padding: 6px 10px; border-radius: 8px;
+    border: 0.5px solid rgba(0,0,0,0.15); background: transparent;
+    color: #1a1a1a; cursor: pointer; white-space: nowrap;
+  }
+  .add-rel-btn:hover { background: #f5f5f3; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Canvas -->
+  <div id="canvas-wrap">
+    <svg id="net"></svg>
+
+    <div id="toolbar">
+      <button id="add-person-btn"><i class="ti ti-plus" aria-hidden="true"></i> Add person</button>
+      <button id="manage-rel-btn"><i class="ti ti-settings" aria-hidden="true"></i> Relationship types</button>
+      <button id="export-btn"><i class="ti ti-download" aria-hidden="true"></i> Export</button>
+      <button id="import-btn"><i class="ti ti-upload" aria-hidden="true"></i> Import</button>
+      <button id="upload-btn"><i class="ti ti-cloud-upload" aria-hidden="true"></i> Upload to server</button>
+      <button id="changelog-btn"><i class="ti ti-history" aria-hidden="true"></i> Changelog</button>
+      <span id="server-status" style="font-size:12px;color:#999;align-self:center;padding:0 4px">23f3 Loading2026</span>
+      <input type="file" id="import-file-input" accept=".json" style="display:none" />
+    </div>
+
+    <!-- Legend -->
+    <div id="legend">
+      <div class="legend-header">Relationship types</div>
+      <div id="legend-rows"></div>
+    </div>
+  </div>
+
+  <!-- Profile panel -->
+  <div id="panel" class="hidden">
+    <div id="panel-header">
+      <div id="panel-avatar"></div>
+      <div id="panel-name-wrap">
+        <input id="panel-name" type="text" placeholder="Name" />
+        <div id="panel-conn-count"></div>
+      </div>
+      <button id="close-panel" aria-label="Close panel"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="panel-body">
+      <div>
+        <label>Bio</label>
+        <textarea id="panel-bio" placeholder="Notes about this person…"></textarea>
+      </div>
+      <div>
+        <label>Photos</label>
+        <div class="img-row" id="img-row"></div>
+        <input type="file" id="file-input" accept="image/*" style="display:none" multiple />
+      </div>
+      <div>
+        <label>Connections</label>
+        <div class="conn-chip-list" id="conn-chips"></div>
+      </div>
+      <button id="connect-btn">
+        <i class="ti ti-line-dashed" aria-hidden="true"></i>&nbsp; Connect to another person
+      </button>
+      <button id="del-btn">
+        <i class="ti ti-trash" aria-hidden="true"></i>&nbsp; Remove this person
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Upload confirm modal -->
+<div class="modal-overlay" id="upload-confirm-modal" style="display:none">
+  <div class="modal">
+    <h3><i class="ti ti-cloud-upload" style="margin-right:6px"></i>Upload to server</h3>
+    <p style="font-size:13px;color:#555;margin-bottom:14px;line-height:1.5">
+      This will overwrite the shared file for everyone. Make sure your changes are ready.
+    </p>
+    <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Message (optional)</label>
+    <input id="upload-message" type="text" placeholder="What did you change?" style="margin-bottom:14px" />
+    <div class="modal-btns">
+      <button id="upload-cancel">Cancel</button>
+      <button class="primary" id="upload-confirm"><i class="ti ti-cloud-upload" aria-hidden="true"></i> Yes, upload</button>
+    </div>
+  </div>
+</div>
+
+<!-- Changelog modal -->
+<div class="modal-overlay" id="changelog-modal" style="display:none">
+  <div class="modal" style="width:340px;max-height:80vh;display:flex;flex-direction:column">
+    <h3 style="margin-bottom:12px"><i class="ti ti-history" style="margin-right:6px"></i>Changelog</h3>
+    <div id="changelog-list" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;max-height:55vh"></div>
+    <div class="modal-btns" style="margin-top:14px">
+      <button class="primary" id="changelog-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload status toast -->
+<div id="upload-toast" style="
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:#1a1a1a;color:#fff;font-size:13px;padding:9px 18px;border-radius:8px;
+  display:none;z-index:100;gap:8px;align-items:center;
+"></div>
+
+<!-- Add person modal -->
+<div class="modal-overlay" id="add-person-modal" style="display:none">
+  <div class="modal">
+    <h3>Add person</h3>
+    <input id="new-person-name" type="text" placeholder="Their name…" />
+    <div class="modal-btns">
+      <button id="add-person-cancel">Cancel</button>
+      <button class="primary" id="add-person-ok">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Relationship picker modal -->
+<div class="modal-overlay" id="rel-picker-modal" style="display:none">
+  <div class="modal">
+    <h3 id="rel-picker-title">Relationship type</h3>
+    <div id="rel-picker-list"></div>
+    <div class="modal-btns">
+      <button id="rel-picker-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manage relationship types modal -->
+<div class="modal-overlay" id="manage-rel-modal" style="display:none">
+  <div class="modal" style="width:300px">
+    <h3>Relationship types</h3>
+    <div id="manage-rel-list"></div>
+    <div id="manage-section">
+      <label>Add new type</label>
+      <div class="new-rel-row">
+        <input type="text" id="new-rel-name" placeholder="Label…" />
+        <input type="color" id="new-rel-color" value="#7F77DD" title="Pick colour" />
+        <select class="dash-select" id="new-rel-dash">
+          <option value="none">——</option>
+          <option value="6,4">- - -</option>
+          <option value="2,4">· · ·</option>
+          <option value="10,4">– – –</option>
+          <option value="4,3,1,3">-·-·</option>
+        </select>
+        <button class="add-rel-btn" id="new-rel-add">Add</button>
+      </div>
+    </div>
+    <div class="modal-btns" style="margin-top:14px">
+      <button class="primary" id="manage-rel-close">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const svg = document.getElementById('net');
+const NS = 'http://www.w3.org/2000/svg';
+const NRX = 56, NRY = 34; // node radius x/y — uniform for all nodes
+
+// ── State ────────────────────────────────────────────────────────────────────
+
+let relTypes = [
+  { id: 'friends',      label: 'Friends',      stroke: '#888780', dasharray: 'none', width: 1.8 },
+  { id: 'dating',       label: 'Dating',       stroke: '#D4537E', dasharray: '6,4',  width: 2   },
+  { id: 'acquaintance', label: 'Acquaintance', stroke: '#378ADD', dasharray: '2,4',  width: 1.5 },
+  { id: 'family',       label: 'Family',       stroke: '#639922', dasharray: '10,4', width: 2   },
+  { id: 'ex',           label: 'Ex',           stroke: '#BA7517', dasharray: '4,3',  width: 1.5 },
+];
+
+let nodes = [
+  { id: 1, label: 'Person A', x: 160, y: 120, bio: '', images: [], fill: '#B5D4F4', textFill: '#0C447C' },
+  { id: 2, label: 'Person B', x: 460, y: 200, bio: '', images: [], fill: '#9FE1CB', textFill: '#085041' },
+  { id: 3, label: 'Person C', x: 200, y: 360, bio: '', images: [], fill: '#F5C4B3', textFill: '#712B13' },
+];
+let edges = [
+  { a: 1, b: 2, type: 'friends' },
+  { a: 2, b: 3, type: 'acquaintance' },
+];
+let nextNodeId = 4;
+let nextRelId  = 100;
+
+let selectedId    = null;
+let connectingFrom = null;
+let pendingEdge   = null;
+let dragging      = null, dragOffX = 0, dragOffY = 0, dragMoved = false;
+
+// Node colour palette (fill + matching dark text)
+const nodePalette = [
+  { fill: '#B5D4F4', textFill: '#0C447C' },
+  { fill: '#9FE1CB', textFill: '#085041' },
+  { fill: '#F5C4B3', textFill: '#712B13' },
+  { fill: '#FAC775', textFill: '#633806' },
+  { fill: '#F4C0D1', textFill: '#72243E' },
+  { fill: '#C0DD97', textFill: '#27500A' },
+  { fill: '#CECBF6', textFill: '#3C3489' },
+];
+let palIdx = 3;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function initials(name) {
+  return name.trim().split(/\s+/).map(w => w[0] || '').join('').toUpperCase().slice(0, 2) || '?';
+}
+
+function getRelType(id) {
+  return relTypes.find(r => r.id === id) || relTypes[0];
+}
+
+function dasharrayToCssStyle(da) {
+  if (da === 'none') return 'solid';
+  if (da.startsWith('2,')) return 'dotted';
+  return 'dashed';
+}
+
+// ── SVG render ────────────────────────────────────────────────────────────────
+
+function render() {
+  svg.innerHTML = '';
+
+  // Draw edges first (below nodes)
+  edges.forEach(edge => {
+    const na = nodes.find(n => n.id === edge.a);
+    const nb = nodes.find(n => n.id === edge.b);
+    if (!na || !nb) return;
+    const rt = getRelType(edge.type);
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', na.x); line.setAttribute('y1', na.y);
+    line.setAttribute('x2', nb.x); line.setAttribute('y2', nb.y);
+    line.setAttribute('stroke', rt.stroke);
+    line.setAttribute('stroke-width', rt.width);
+    line.setAttribute('stroke-dasharray', rt.dasharray === 'none' ? '' : rt.dasharray);
+    line.setAttribute('fill', 'none');
+    svg.appendChild(line);
+  });
+
+  // Draw nodes
+  nodes.forEach(node => {
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'node-group');
+    g.setAttribute('data-id', node.id);
+
+    const el = document.createElementNS(NS, 'ellipse');
+    el.setAttribute('cx', node.x); el.setAttribute('cy', node.y);
+    el.setAttribute('rx', NRX);    el.setAttribute('ry', NRY);
+    el.setAttribute('class', 'node-ellipse');
+    el.setAttribute('fill', node.fill);
+
+    if (connectingFrom === node.id) {
+      el.setAttribute('stroke', '#0F6E56');
+      el.setAttribute('stroke-width', '2');
+      el.setAttribute('stroke-dasharray', '5,3');
+    } else if (selectedId === node.id) {
+      el.setAttribute('stroke', '#185FA5');
+      el.setAttribute('stroke-width', '2');
+    } else {
+      el.setAttribute('stroke', 'rgba(0,0,0,0.15)');
+      el.setAttribute('stroke-width', '1');
+    }
+    g.appendChild(el);
+
+    // Multi-line label (split on spaces)
+    const words = node.label.split(' ');
+    words.forEach((word, i) => {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', node.x);
+      t.setAttribute('y', node.y + (i - (words.length - 1) / 2) * 16);
+      t.setAttribute('class', 'node-label');
+      t.setAttribute('fill', node.textFill);
+      t.textContent = word;
+      g.appendChild(t);
+    });
+
+    g.addEventListener('mousedown', e => startDrag(e, node));
+    g.addEventListener('touchstart', e => startDrag(e, node), { passive: false });
+    svg.appendChild(g);
+  });
+
+  renderLegend();
+}
+
+function renderLegend() {
+  const container = document.getElementById('legend-rows');
+  container.innerHTML = '';
+  relTypes.forEach(rt => {
+    const row = document.createElement('div');
+    row.className = 'legend-row';
+    const lineEl = document.createElement('div');
+    lineEl.style.cssText = `
+      width: 28px; height: 0; flex-shrink: 0;
+      border-top: 2px ${dasharrayToCssStyle(rt.dasharray)} ${rt.stroke};
+    `;
+    const lbl = document.createElement('span');
+    lbl.textContent = rt.label;
+    row.appendChild(lineEl);
+    row.appendChild(lbl);
+    container.appendChild(row);
+  });
+}
+
+// ── Drag ──────────────────────────────────────────────────────────────────────
+
+function getPoint(e) {
+  const rect = svg.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+}
+
+function startDrag(e, node) {
+  e.preventDefault();
+  const pt = getPoint(e);
+  dragging = node; dragMoved = false;
+  dragOffX = pt.x - node.x; dragOffY = pt.y - node.y;
+}
+
+svg.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const pt = getPoint(e);
+  if (Math.abs(pt.x - dragOffX - dragging.x) > 3 || Math.abs(pt.y - dragOffY - dragging.y) > 3) dragMoved = true;
+  dragging.x = pt.x - dragOffX;
+  dragging.y = pt.y - dragOffY;
+  render();
+});
+svg.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  e.preventDefault();
+  const pt = getPoint(e);
+  dragMoved = true;
+  dragging.x = pt.x - dragOffX;
+  dragging.y = pt.y - dragOffY;
+  render();
+}, { passive: false });
+
+function endDrag() {
+  if (!dragging) return;
+  if (!dragMoved) handleNodeClick(dragging);
+  dragging = null;
+}
+svg.addEventListener('mouseup', endDrag);
+svg.addEventListener('touchend', endDrag);
+
+// ── Node click ────────────────────────────────────────────────────────────────
+
+function handleNodeClick(node) {
+  // If we're in "connecting" mode, this click finalises the edge
+  if (connectingFrom !== null) {
+    if (connectingFrom !== node.id) {
+      const exists = edges.some(e =>
+        (e.a === connectingFrom && e.b === node.id) ||
+        (e.a === node.id && e.b === connectingFrom)
+      );
+      if (!exists) {
+        pendingEdge = { a: connectingFrom, b: node.id };
+        showRelPicker(
+          nodes.find(n => n.id === connectingFrom),
+          node
+        );
+      }
+    }
+    connectingFrom = null;
+    resetConnectBtn();
+    render();
+    return;
+  }
+  selectNode(node.id);
+}
+
+function resetConnectBtn() {
+  const btn = document.getElementById('connect-btn');
+  btn.classList.remove('active');
+  btn.innerHTML = '<i class="ti ti-line-dashed" aria-hidden="true"></i>&nbsp; Connect to another person';
+}
+
+// ── Relationship picker ───────────────────────────────────────────────────────
+
+function showRelPicker(na, nb) {
+  document.getElementById('rel-picker-title').textContent = `${na.label} → ${nb.label}`;
+  const list = document.getElementById('rel-picker-list');
+  list.innerHTML = '';
+
+  relTypes.forEach(rt => {
+    const div = document.createElement('div');
+    div.className = 'rel-option';
+
+    const preview = document.createElement('div');
+    preview.style.cssText = `
+      width: 32px; height: 0; flex-shrink: 0;
+      border-top: 2px ${dasharrayToCssStyle(rt.dasharray)} ${rt.stroke};
+    `;
+    const lbl = document.createElement('span');
+    lbl.className = 'rel-option-label';
+    lbl.textContent = rt.label;
+
+    div.appendChild(preview);
+    div.appendChild(lbl);
+    div.addEventListener('click', () => {
+      if (pendingEdge) {
+        edges.push({ a: pendingEdge.a, b: pendingEdge.b, type: rt.id });
+        pendingEdge = null;
+        if (selectedId) selectNode(selectedId);
+      }
+      document.getElementById('rel-picker-modal').style.display = 'none';
+      render();
+    });
+    list.appendChild(div);
+  });
+
+  document.getElementById('rel-picker-modal').style.display = 'flex';
+}
+
+document.getElementById('rel-picker-cancel').addEventListener('click', () => {
+  pendingEdge = null;
+  document.getElementById('rel-picker-modal').style.display = 'none';
+});
+
+// ── Profile panel ─────────────────────────────────────────────────────────────
+
+function selectNode(id) {
+  selectedId = id;
+  const node = nodes.find(n => n.id === id);
+  if (!node) return;
+
+  document.getElementById('panel').classList.remove('hidden');
+  document.getElementById('panel-name').value = node.label;
+  document.getElementById('panel-bio').value  = node.bio || '';
+
+  const av = document.getElementById('panel-avatar');
+  av.textContent   = initials(node.label);
+  av.style.background = node.fill;
+  av.style.color      = node.textFill;
+
+  refreshConnCount(node);
+  renderConnChips(node);
+  renderImgRow(node);
+  render();
+}
+
+function refreshConnCount(node) {
+  const count = edges.filter(e => e.a === node.id || e.b === node.id).length;
+  document.getElementById('panel-conn-count').textContent =
+    count + ' connection' + (count === 1 ? '' : 's');
+}
+
+function renderConnChips(node) {
+  const container = document.getElementById('conn-chips');
+  container.innerHTML = '';
+
+  const myEdges = edges.filter(e => e.a === node.id || e.b === node.id);
+  if (!myEdges.length) {
+    container.innerHTML = '<span style="font-size:12px;color:#bbb">No connections yet</span>';
+    return;
+  }
+
+  myEdges.forEach(edge => {
+    const otherId = edge.a === node.id ? edge.b : edge.a;
+    const other   = nodes.find(n => n.id === otherId);
+    if (!other) return;
+    const rt = getRelType(edge.type);
+
+    const chip = document.createElement('span');
+    chip.className = 'conn-chip';
+
+    const swatch = document.createElement('div');
+    swatch.className = 'conn-chip-swatch';
+    swatch.style.background = rt.stroke;
+
+    const text = document.createElement('span');
+    text.className = 'conn-chip-text';
+    text.textContent = other.label;
+
+    const x = document.createElement('span');
+    x.className = 'conn-chip-x';
+    x.title = 'Remove connection';
+    x.textContent = '✕';
+    x.addEventListener('click', () => {
+      edges = edges.filter(e =>
+        !((e.a === node.id && e.b === otherId) || (e.a === otherId && e.b === node.id))
+      );
+      renderConnChips(node);
+      refreshConnCount(node);
+      render();
+    });
+
+    chip.appendChild(swatch);
+    chip.appendChild(text);
+    chip.appendChild(x);
+    container.appendChild(chip);
+  });
+}
+
+function renderImgRow(node) {
+  const row = document.getElementById('img-row');
+  row.innerHTML = '';
+  (node.images || []).forEach(src => {
+    const img = document.createElement('img');
+    img.src = src; img.className = 'img-thumb';
+    row.appendChild(img);
+  });
+  const addBtn = document.createElement('div');
+  addBtn.className = 'img-add';
+  addBtn.innerHTML = '<i class="ti ti-plus" aria-hidden="true"></i>';
+  addBtn.addEventListener('click', () => document.getElementById('file-input').click());
+  row.appendChild(addBtn);
+}
+
+document.getElementById('panel-name').addEventListener('input', e => {
+  const node = nodes.find(n => n.id === selectedId);
+  if (!node) return;
+  node.label = e.target.value;
+  document.getElementById('panel-avatar').textContent = initials(node.label);
+  render();
+});
+document.getElementById('panel-bio').addEventListener('input', e => {
+  const node = nodes.find(n => n.id === selectedId);
+  if (node) node.bio = e.target.value;
+});
+document.getElementById('file-input').addEventListener('change', e => {
+  const node = nodes.find(n => n.id === selectedId);
+  if (!node) return;
+  Array.from(e.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      node.images = node.images || [];
+      node.images.push(ev.target.result);
+      renderImgRow(node);
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+});
+document.getElementById('close-panel').addEventListener('click', () => {
+  document.getElementById('panel').classList.add('hidden');
+  selectedId = null; connectingFrom = null;
+  render();
+});
+document.getElementById('connect-btn').addEventListener('click', () => {
+  if (connectingFrom === selectedId) {
+    connectingFrom = null;
+    resetConnectBtn();
+  } else {
+    connectingFrom = selectedId;
+    const btn = document.getElementById('connect-btn');
+    btn.classList.add('active');
+    btn.innerHTML = '<i class="ti ti-line-dashed" aria-hidden="true"></i>&nbsp; Now click another person…';
+  }
+  render();
+});
+document.getElementById('del-btn').addEventListener('click', () => {
+  nodes = nodes.filter(n => n.id !== selectedId);
+  edges = edges.filter(e => e.a !== selectedId && e.b !== selectedId);
+  selectedId = null; connectingFrom = null;
+  document.getElementById('panel').classList.add('hidden');
+  render();
+});
+
+// ── Add person modal ──────────────────────────────────────────────────────────
+
+document.getElementById('add-person-btn').addEventListener('click', () => {
+  document.getElementById('add-person-modal').style.display = 'flex';
+  document.getElementById('new-person-name').value = '';
+  setTimeout(() => document.getElementById('new-person-name').focus(), 50);
+});
+
+function commitAddPerson() {
+  const name = document.getElementById('new-person-name').value.trim();
+  if (!name) return;
+  const c = nodePalette[palIdx % nodePalette.length]; palIdx++;
+  nodes.push({
+    id: nextNodeId++,
+    label: name,
+    x: 120 + Math.random() * 340,
+    y: 80  + Math.random() * 400,
+    bio: '', images: [],
+    fill: c.fill, textFill: c.textFill,
+  });
+  document.getElementById('add-person-modal').style.display = 'none';
+  render();
+}
+document.getElementById('add-person-ok').addEventListener('click', commitAddPerson);
+document.getElementById('add-person-cancel').addEventListener('click', () => {
+  document.getElementById('add-person-modal').style.display = 'none';
+});
+document.getElementById('new-person-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter')  commitAddPerson();
+  if (e.key === 'Escape') document.getElementById('add-person-modal').style.display = 'none';
+});
+
+// ── Manage relationship types modal ──────────────────────────────────────────
+
+document.getElementById('manage-rel-btn').addEventListener('click', () => {
+  renderManageRelList();
+  document.getElementById('manage-rel-modal').style.display = 'flex';
+});
+document.getElementById('manage-rel-close').addEventListener('click', () => {
+  document.getElementById('manage-rel-modal').style.display = 'none';
+  render(); // re-render legend + edges with updated types
+});
+
+function renderManageRelList() {
+  const container = document.getElementById('manage-rel-list');
+  container.innerHTML = '';
+  relTypes.forEach(rt => {
+    const row = document.createElement('div');
+    row.className = 'rel-option';
+
+    const preview = document.createElement('div');
+    preview.style.cssText = `
+      width: 32px; height: 0; flex-shrink: 0;
+      border-top: 2px ${dasharrayToCssStyle(rt.dasharray)} ${rt.stroke};
+    `;
+
+    const lbl = document.createElement('span');
+    lbl.className = 'rel-option-label';
+    lbl.textContent = rt.label;
+
+    // Delete button — disabled if this type is in use
+    const inUse = edges.some(e => e.type === rt.id);
+    const del = document.createElement('span');
+    del.className = 'rel-option-del';
+    del.innerHTML = '<i class="ti ti-trash" aria-hidden="true"></i>';
+    del.title = inUse ? 'In use — remove connections first' : 'Delete type';
+    del.style.opacity = inUse ? '0.3' : '1';
+    del.style.cursor  = inUse ? 'not-allowed' : 'pointer';
+    if (!inUse) {
+      del.addEventListener('click', () => {
+        relTypes = relTypes.filter(r => r.id !== rt.id);
+        renderManageRelList();
+      });
+    }
+
+    row.appendChild(preview);
+    row.appendChild(lbl);
+    row.appendChild(del);
+    container.appendChild(row);
+  });
+}
+
+document.getElementById('new-rel-add').addEventListener('click', () => {
+  const name = document.getElementById('new-rel-name').value.trim();
+  if (!name) return;
+  const color    = document.getElementById('new-rel-color').value;
+  const dasharray = document.getElementById('new-rel-dash').value;
+  relTypes.push({
+    id:        'custom_' + (nextRelId++),
+    label:     name,
+    stroke:    color,
+    dasharray: dasharray,
+    width:     1.8,
+  });
+  document.getElementById('new-rel-name').value = '';
+  renderManageRelList();
+});
+document.getElementById('new-rel-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('new-rel-add').click();
+});
+
+// ── Export / Import ───────────────────────────────────────────────────────────
+
+document.getElementById('export-btn').addEventListener('click', () => {
+  const state = {
+    version: 1,
+    nodes,
+    edges,
+    relTypes,
+    nextNodeId,
+    nextRelId,
+    palIdx,
+  };
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const now  = new Date();
+  const stamp = now.getFullYear() + '-' +
+    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+    String(now.getDate()).padStart(2, '0');
+  a.href     = url;
+  a.download = `social-web-${stamp}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('import-btn').addEventListener('click', () => {
+  document.getElementById('import-file-input').value = '';
+  document.getElementById('import-file-input').click();
+});
+
+document.getElementById('import-file-input').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const state = JSON.parse(ev.target.result);
+      if (!state.nodes || !state.edges || !state.relTypes) {
+        alert('This file doesn\'t look like a Social Web save file.');
+        return;
+      }
+      nodes      = state.nodes;
+      edges      = state.edges;
+      relTypes   = state.relTypes;
+      nextNodeId = state.nextNodeId ?? (Math.max(0, ...nodes.map(n => n.id)) + 1);
+      nextRelId  = state.nextRelId  ?? 200;
+      palIdx     = state.palIdx     ?? 0;
+      selectedId    = null;
+      connectingFrom = null;
+      pendingEdge   = null;
+      document.getElementById('panel').classList.add('hidden');
+      render();
+    } catch {
+      alert('Could not read the file — make sure it\'s a valid Social Web JSON.');
+    }
+  };
+  reader.readAsText(file);
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+render();
+
+// ── Collaboration backend (GitHub) ───────────────────────────────────────────
+
+const GH_TOKEN = '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';
+const GH_OWNER = 'icodewithmaplesyrup';
+const GH_REPO  = 'Social-Web';
+const GH_API_STATE     = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/changes.json`;
+const GH_API_CHANGELOG = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/changelog.json`;
+
+const GH_HEADERS = {
+  Authorization: `Bearer ${GH_TOKEN}`,
+  Accept: 'application/vnd.github+json',
+  'Content-Type': 'application/json',
+};
+
+// ── Toast helper ─────────────────────────────────────────────────────────────
+
+let _toastTimer;
+function showToast(msg, isError = false) {
+  const el = document.getElementById('upload-toast');
+  el.textContent = msg;
+  el.style.background = isError ? '#a32d2d' : '#1a1a1a';
+  el.style.display = 'flex';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { el.style.display = 'none'; }, 3200);
+}
+
+// ── State helpers ─────────────────────────────────────────────────────────────
+
+function currentState() {
+  return { version: 1, nodes, edges, relTypes, nextNodeId, nextRelId, palIdx };
+}
+
+function applyState(state) {
+  if (!state.nodes || !state.edges || !state.relTypes) return;
+  nodes = state.nodes; edges = state.edges; relTypes = state.relTypes;
+  nextNodeId = state.nextNodeId ?? (Math.max(0, ...nodes.map(n => n.id)) + 1);
+  nextRelId  = state.nextRelId  ?? 200;
+  palIdx     = state.palIdx     ?? 0;
+  selectedId = connectingFrom = pendingEdge = null;
+  document.getElementById('panel').classList.add('hidden');
+  render();
+}
+
+// ── GitHub read/write helpers ─────────────────────────────────────────────────
+
+async function ghGet(url) {
+  const res = await fetch(url, { headers: GH_HEADERS });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function ghPut(url, content, sha, commitMsg) {
+  const body = { message: commitMsg, content: btoa(unescape(encodeURIComponent(content))), sha };
+  const res = await fetch(url, { method: 'PUT', headers: GH_HEADERS, body: JSON.stringify(body) });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+// ── Load current state from backend (once on open) ───────────────────────────
+
+const statusDot = document.getElementById('server-status');
+
+async function loadFromBackend() {
+  statusDot.textContent = '⏳ Loading from server…';
+  statusDot.style.color = '#999';
+  try {
+    const meta = await ghGet(GH_API_STATE);
+    if (!meta) {
+      statusDot.textContent = '⚠️ Couldn\'t reach server';
+      statusDot.style.color = '#a32d2d';
+      return;
+    }
+    const state = JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g, '')))));
+    applyState(state);
+    window._ghSha = meta.sha;
+    const d = new Date();
+    statusDot.textContent = `✓ Loaded · ${d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})}`;
+    statusDot.style.color = '#639922';
+  } catch(e) {
+    statusDot.textContent = '⚠️ Load failed';
+    statusDot.style.color = '#a32d2d';
+  }
+}
+
+// Load once on open — no polling, user edits locally then uploads manually
+loadFromBackend();
+
+// ── Upload to server (manual, with confirmation) ──────────────────────────────
+
+document.getElementById('upload-btn').addEventListener('click', () => {
+  document.getElementById('upload-message').value = '';
+  document.getElementById('upload-confirm-modal').style.display = 'flex';
+  setTimeout(() => document.getElementById('upload-message').focus(), 60);
+});
+
+document.getElementById('upload-cancel').addEventListener('click', () => {
+  document.getElementById('upload-confirm-modal').style.display = 'none';
+});
+
+document.getElementById('upload-message').addEventListener('keydown', e => {
+  if (e.key === 'Enter')  document.getElementById('upload-confirm').click();
+  if (e.key === 'Escape') document.getElementById('upload-confirm-modal').style.display = 'none';
+});
+
+document.getElementById('upload-confirm').addEventListener('click', async () => {
+  document.getElementById('upload-confirm-modal').style.display = 'none';
+  const userMsg = document.getElementById('upload-message').value.trim() || 'Updated social web';
+  showToast('⏳ Uploading…');
+
+  try {
+    // 1. Always fetch the freshest sha right before writing to avoid conflicts
+    const freshMeta = await ghGet(GH_API_STATE);
+    if (freshMeta) window._ghSha = freshMeta.sha;
+
+    const stateJson = JSON.stringify(currentState(), null, 2);
+    const stateResult = await ghPut(GH_API_STATE, stateJson, window._ghSha, userMsg);
+    if (!stateResult) { showToast('Upload failed — couldn\'t write state.', true); return; }
+    window._ghSha = stateResult.content.sha;
+
+    // 2. Load existing changelog, prepend new entry, save
+    const clMeta = await ghGet(GH_API_CHANGELOG);
+    let changelog = [];
+    let clSha = undefined;
+    if (clMeta) {
+      try { changelog = JSON.parse(decodeURIComponent(escape(atob(clMeta.content.replace(/\n/g, ''))))); } catch {}
+      clSha = clMeta.sha;
+    }
+
+    // Snapshot the state into the changelog entry for revert
+    changelog.unshift({
+      timestamp: new Date().toISOString(),
+      message:   userMsg,
+      state:     currentState(),
+    });
+
+    // Keep only the last 30 entries to stay within GitHub file size limits
+    if (changelog.length > 30) changelog = changelog.slice(0, 30);
+
+    const clJson = JSON.stringify(changelog, null, 2);
+    const clBody = { message: `changelog: ${userMsg}`, content: btoa(unescape(encodeURIComponent(clJson))) };
+    if (clSha) clBody.sha = clSha;
+    await fetch(GH_API_CHANGELOG, { method: 'PUT', headers: GH_HEADERS, body: JSON.stringify(clBody) });
+
+    showToast('✓ Uploaded successfully');
+  } catch (err) {
+    showToast('Upload error: ' + err.message, true);
+  }
+});
+
+// ── Changelog modal ───────────────────────────────────────────────────────────
+
+document.getElementById('changelog-btn').addEventListener('click', async () => {
+  document.getElementById('changelog-modal').style.display = 'flex';
+  const list = document.getElementById('changelog-list');
+  list.innerHTML = '<div style="font-size:13px;color:#999;padding:8px 0">Loading…</div>';
+
+  const clMeta = await ghGet(GH_API_CHANGELOG);
+  if (!clMeta) {
+    list.innerHTML = '<div style="font-size:13px;color:#999;padding:8px 0">No changelog yet.</div>';
+    return;
+  }
+
+  let changelog = [];
+  try { changelog = JSON.parse(decodeURIComponent(escape(atob(clMeta.content.replace(/\n/g, ''))))); } catch {}
+
+  if (!changelog.length) {
+    list.innerHTML = '<div style="font-size:13px;color:#999;padding:8px 0">No entries yet.</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  changelog.forEach((entry, idx) => {
+    const d = new Date(entry.timestamp);
+    const timeStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+      + ' · ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+
+    const div = document.createElement('div');
+    div.className = 'changelog-entry';
+    div.innerHTML = `
+      <div class="changelog-entry-top">
+        <div class="changelog-entry-msg">${entry.message || 'No message'}</div>
+        <div class="changelog-entry-time">${timeStr}</div>
+      </div>
+      ${idx === 0 ? '<div class="changelog-entry-author" style="color:#639922;font-weight:500">Current version</div>' : ''}
+    `;
+
+    if (idx > 0) {
+      const revertBtn = document.createElement('button');
+      revertBtn.className = 'changelog-revert-btn';
+      revertBtn.innerHTML = '<i class="ti ti-rotate-2" aria-hidden="true"></i> Revert to this version';
+      revertBtn.addEventListener('click', () => {
+        if (!confirm(`Revert to "${entry.message || 'this version'}"?\n\nThis will replace the current graph with this older version and upload it.`)) return;
+        document.getElementById('changelog-modal').style.display = 'none';
+        applyState(entry.state);
+        // Trigger an upload so the revert is persisted
+        document.getElementById('upload-message').value = `Revert to: ${entry.message || timeStr}`;
+        document.getElementById('upload-confirm').click();
+      });
+      div.appendChild(revertBtn);
+    }
+
+    list.appendChild(div);
+  });
+});
+
+document.getElementById('changelog-close').addEventListener('click', () => {
+  document.getElementById('changelog-modal').style.display = 'none';
+});
+</script>
+</body>
+</html>
